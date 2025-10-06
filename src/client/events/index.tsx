@@ -4,17 +4,33 @@ export type EventItem = {
   id: number;
   title: string;
   image_url?: string | null;
-  start_datetime: string;   // ISO
+  start_datetime: string;  
   end_datetime?: string;
   status?: string;
   description?: string;
   is_published?: boolean;
-  created_at?: string;      // ISO
-  updated_at?: string;      // ISO
+  created_at?: string;      
+  updated_at?: string;      
   organizer_id?: number;
   venue_id?: number;
   organizer_user?: number | null;
 };
+
+
+export async function createEvent(payload: EventItem) {
+  const { data } = await http.post("events/", payload);
+  return data;
+}
+
+export async function updateEvent(id: number | string, payload: Partial<EventItem>) {
+  const { data } = await http.patch(`events/${id}/`, payload);
+  return data;
+}
+
+export async function deleteEvent(id: number | string) {
+  await http.delete(`events/${id}/`);
+}
+
 export async function fetchAllEvents(): Promise<EventItem[]> {
   const { data } = await http.get<EventItem[]>("events");
   console.log("API /events (raw):", data); // <- imprime todo lo que manda el endpoint
