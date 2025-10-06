@@ -26,6 +26,8 @@ export default function Login() {
   const [showModalAlertWarning, setShowModalAlertWarning] = useState(false);
   const [warningText, setWarningText] = useState("");
 
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
+const isStrongPassword = (value) => value?.trim().length >= 8;
 
   const closeSuccess = () => {
     setShowModalSuccess(false);
@@ -60,12 +62,24 @@ export default function Login() {
           return;
         }
 
-        await registerApi({
-          email,
-          password,
-          first_name: firstName,
-          last_name: lastName,
-        });
+  if (!isValidEmail(email)) {
+    setWarningText("Ingresa un correo válido (ej. usuario@dominio.com).");
+    setShowModalAlertWarning(true);
+    return;
+  }
+
+  if (!isStrongPassword(password)) {
+    setWarningText("La contraseña debe tener al menos 8 caracteres.");
+    setShowModalAlertWarning(true);
+    return;
+  }
+
+  await registerApi({
+    email: email.trim(),
+    password,
+    first_name: firstName.trim(),
+    last_name: lastName.trim(),
+  });
 
         setSuccessText("¡Registro exitoso! Ahora puedes iniciar sesión.");
         setShowModalSuccess(true);
