@@ -55,12 +55,24 @@ const isStrongPassword = (value) => value?.trim().length >= 8;
         setSuccessText("¡Inicio de sesión exitoso!");
         setShowModalSuccess(true);
       } else {
-        // REGISTER
-        if (!firstName.trim() || !lastName.trim()) {
-          setWarningText("Por favor, ingresa nombre y apellido.");
-          setShowModalAlertWarning(true);
-          return;
-        }
+  // REGISTER
+  const requiredRegisterFields = [
+    { key: "firstName", label: "Nombre", value: firstName },
+    { key: "lastName",  label: "Apellido", value: lastName },
+    { key: "email",     label: "Correo", value: email },
+    { key: "password",  label: "Contraseña", value: password },
+
+  ];
+
+  const missing = requiredRegisterFields
+    .filter(f => !f.value || !String(f.value).trim())
+    .map(f => f.label);
+
+  if (missing.length) {
+    setWarningText(`Completa: ${missing.join(", ")}.`);
+    setShowModalAlertWarning(true);
+    return;
+  }
 
   if (!isValidEmail(email)) {
     setWarningText("Ingresa un correo válido (ej. usuario@dominio.com).");
@@ -83,7 +95,6 @@ const isStrongPassword = (value) => value?.trim().length >= 8;
 
         setSuccessText("¡Registro exitoso! Ahora puedes iniciar sesión.");
         setShowModalSuccess(true);
-        // No navegamos aún; al cerrar modal cambiamos a pestaña Login
       }
     } catch (err) {
       const backendMsg =
