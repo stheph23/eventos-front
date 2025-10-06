@@ -1,13 +1,61 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
+  @font-face {
+    font-family: "ITC-demi";
+    src: url(/src/assets/fonts/ITC/ITCAvantGardeStd-Demi.ttf);
+  }
+  
+  .font-itc-demi {
+    font-family: "ITC-demi", sans-serif;
+  }
+  
+  @font-face {
+    font-family: "ITC-bold";
+    src: url(/src/assets/fonts/ITC/ITCAvantGardeStd-Bold.ttf);
+  }
+  
+  .font-itc-bold {
+    font-family: "ITC-bold", sans-serif;
+  }
+  
+  @font-face {
+    font-family: "ITC-book";
+    src: url(/src/assets/fonts/ITC/ITCAvantGardeStd-Bk.ttf);
+  }
+  
+  .font-itc-book {
+    font-family: "ITC-book", sans-serif;
+  }
+  
+  @font-face {
+    font-family: "ITC-medium";
+    src: url(/src/assets/fonts/ITC/ITCAvantGardeStd-Md.ttf);
+  }
+  
+  .font-itc-medium {
+    font-family: "ITC-medium", sans-serif;
+  }
+
+
+  ::-webkit-scrollbar {
+  width: 6px;  /* Ancho para scroll vertical */
+  height: 6px; /* Alto para scroll horizontal */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+::-webkit-scrollbar-track {
+  background: transparent; /* Fondo transparente */
+  margin: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00759657; /* Color con transparencia */
+  border-radius: 4px !important; /* Bordes redondeados */
+  visibility: visible !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box;
+}
+
+/* Estilos para Firefox */
+* {
+  scrollbar-width: thin; /* "auto" | "thin" | "none" */
+  scrollbar-color: #00759657 transparent; /* Color del thumb y track */
 }
