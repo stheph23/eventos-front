@@ -8,12 +8,12 @@ import Header from "../../components/header";
 export default function Home() {
 
     return(
-    <div className="flex flex-col w-full pt-8 gap-14 ">
+    <div className="flex flex-col w-full gap-6 pt-8 ">
         <Header/>
         <img src={banner} className="w-full h-auto "/>
 
-        <h1 className="pt-3 pb-8 text-4xl text-center font-itcbold">NUESTROS PRÓXIMOS EVENTOS</h1>
-        <div className="flex items-center justify-center w-full gap-10">
+        <h1 className="pt-8 pb-8 text-4xl text-center font-itcbold">NUESTROS PRÓXIMOS EVENTOS</h1>
+        <div className="flex items-center justify-center w-full gap-10 pb-12">
             <CardEvent/>
             <CardEvent/>
             <CardEvent/>
