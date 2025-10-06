@@ -39,7 +39,7 @@ const CardEvent = ({
 }) => {
     return(
         <div className="w-[283px] h-[300px] overflow-hidden flex flex-col gap-2 rounded-2xl drop-shadow-card bg-white">
-            <Link to={`/detalle-evento/${id ?? ""}`}>
+            <Link to={`/detalle-evento/${id}`}>
                 <img 
                     src={imageUrl} 
                     className="w-[283px] h-[150px] object-cover] cursor-pointer"
