@@ -13,7 +13,7 @@ function App() {
         {/* Ruta principal */}
         <Route path="/inicio" element={<Home />} />
         <Route path="/eventos" element={<Events />} />
-        <Route path="/detalle-evento" element={<DetailEvent />} />
+        <Route path="/detalle-evento/:id" element={<DetailEvent />} />
         <Route path="/iniciar-sesión" element={<Login />} />
 
 

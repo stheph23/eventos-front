@@ -1,8 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import bannerprueba from "../../assets/images/detalle-evento-prueba.png";
 import PaymentModal from "../../components/paymentModal";
+import { fetchEventById } from "../../client/events";
+
+const MONTHS_ES = [
+  "enero","febrero","marzo","abril","mayo","junio",
+  "julio","agosto","septiembre","octubre","noviembre","diciembre"
+];
+
+function formatDateLima(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  // Tomamos componentes en la zona horaria de Lima
+  const fmt = new Intl.DateTimeFormat("es-PE", {
+    timeZone: "America/Lima",
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  }).formatToParts(d);
+
+  const day = fmt.find(p => p.type === "day")?.value?.padStart(2, "0") ?? "";
+  const monthName = fmt.find(p => p.type === "month")?.value ?? "";
+  const year = fmt.find(p => p.type === "year")?.value ?? "";
+
+  // Capitalizar mes
+  const mesCap = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+  return `${day} de ${mesCap}, ${year}`;
+}
+
+function formatTimeLima(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  // 24h sin segundos, zona Lima
+  return new Intl.DateTimeFormat("es-PE", {
+    timeZone: "America/Lima",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(d);
+}
+
+function isSameDayLima(aIso, bIso) {
+  if (!aIso || !bIso) return false;
+  const a = new Date(aIso);
+  const b = new Date(bIso);
+
+  const opt = { timeZone: "America/Lima", year: "numeric", month: "2-digit", day: "2-digit" };
+  const aStr = new Intl.DateTimeFormat("en-CA", opt).format(a); // yyyy-mm-dd
+  const bStr = new Intl.DateTimeFormat("en-CA", opt).format(b);
+  return aStr === bStr;
+}
 
 const CalendarIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -28,30 +78,71 @@ const MapPinIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
 );
+const ZONES_FAKE = [
+  { id: "general", name: "General", price: 20 },
+  { id: "vip", name: "VIP", price: 60 },
+  { id: "platinum", name: "Platinum", price: 80 },
+];
+
 
 export default function DetailEvent() {
+
+  const { id } = useParams();
+
+  const [eventData, setEventData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+
+
     // Datos de ejemplo para el evento
     const [ticketCount, setTicketCount] = useState(1);
     const [selectedZone, setSelectedZone] = useState("general");
     const [showPaymentModal, setShowPaymentModal] = useState(false);     
 
-    const eventData = {
-        title: "Festival de Música Internacional",
-        subtitle: "Una noche llena de ritmo y melodías con artistas de todo el mundo",
-        date: "15 de Noviembre, 2023",
-        time: "19:00 - 23:00 hrs",
-        price: 450,
-        location: "Auditorio Nacional",
-        description: "Disfruta de una experiencia musical única con los mejores artistas internacionales. Este evento reúne talento de diferentes géneros musicales para ofrecerte una noche inolvidable llena de energía y emociones.",
-        zones: [
-            { id: "general", name: "General", price: 450 },
-            { id: "vip", name: "VIP", price: 800 },
-            { id: "platinum", name: "Platinum", price: 1200 }
-        ]
-    };
-
-    const currentZone = eventData.zones.find(z => z.id === selectedZone);
+    const currentZone = ZONES_FAKE.find(z => z.id === selectedZone);
     const totalPrice = currentZone ? currentZone.price * ticketCount : eventData.price * ticketCount;
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const data = await fetchEventById(id);
+        if (!alive) return;
+
+        // Armamos los campos solicitados
+        const date = formatDateLima(data.start_datetime);
+
+        let time = "";
+        const start = formatTimeLima(data.start_datetime);
+        const end = data.end_datetime ? formatTimeLima(data.end_datetime) : null;
+
+        if (end && isSameDayLima(data.start_datetime, data.end_datetime)) {
+          time = `${start} - ${end} hrs`;
+        } else {
+          time = `${start} hrs`;
+        }
+
+        setEventData({
+          title: data.title,
+          description: data.description,
+          date,
+          time,
+          image_url: data.image_url ?? null,
+          // si luego necesitas otros campos, los pasas aquí
+        });
+      } catch (e) {
+        console.error(e);
+        setErr("No se pudo cargar el evento.");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, [id]);
+
+  if (loading) return <div className="pt-8"><Header/><p className="p-6">Cargando...</p><Footer/></div>;
+  if (err) return <div className="pt-8"><Header/><p className="p-6 text-red-600">{err}</p><Footer/></div>;
+  if (!eventData) return <div className="pt-8"><Header/><p className="p-6">Evento no encontrado.</p><Footer/></div>;
 
     const handleIncrement = () => {
         setTicketCount(prev => prev + 1);
@@ -70,6 +161,15 @@ export default function DetailEvent() {
     const handleCloseModal = () => {
         setShowPaymentModal(false);
     };
+
+     const eventoData = {
+
+        zones: [
+            { id: "general", name: "General", price: 450 },
+            { id: "vip", name: "VIP", price: 800 },
+            { id: "platinum", name: "Platinum", price: 1200 }
+        ]
+    };
     
     return (
         <div className="flex flex-col w-full min-h-screen gap-8 pt-8">
@@ -77,7 +177,7 @@ export default function DetailEvent() {
             
             <div className="px-[5%] flex flex-col gap-8">
                 {/* Banner del evento */}
-                <img src={bannerprueba} className="w-full rounded-xl h-[406px] object-cover shadow-lg" alt="Banner del evento"/>
+                <img src={eventData.image_url} className="w-full rounded-xl h-[406px] object-cover shadow-lg" alt="Banner del evento"/>
                 
                 {/* Información principal */}
                 <div className="flex flex-col gap-8 lg:flex-row">
@@ -116,7 +216,7 @@ export default function DetailEvent() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500 font-itcbook">Precio</p>
-                                    <p className="text-sm font-itcmedium">S/.{eventData.price}.00 </p>
+                                    <p className="text-sm font-itcmedium">S/20.00 </p>
                                 </div>
                             </div>
                             
@@ -126,7 +226,9 @@ export default function DetailEvent() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500 font-itcbook">Ubicación</p>
-                                    <p className="text-sm font-itcmedium">{eventData.location}</p>
+                                    <p className="text-sm font-itcmedium">
+                                        Lima, Perú
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -136,14 +238,16 @@ export default function DetailEvent() {
                     <div className="sticky p-6 bg-white shadow-lg lg:w-96 rounded-xl h-fit top-4">
                         <h3 className="mb-4 text-xl font-itcbold">Reserva tu lugar</h3>
                         
+                        
                         <div className="mb-6">
                             <label className="block mb-2 text-gray-700 outline-none font-itcbook">Selecciona tu zona:</label>
                             <select 
                                 className="w-full p-3 border rounded-lg outline-none"
                                 value={selectedZone}
-                                onChange={(e) => setSelectedZone(e.target.value)}
+                                onCh
+                                ange={(e) => setSelectedZone(e.target.value)}
                             >
-                                {eventData.zones.map(zone => (
+                                {ZONES_FAKE.map(zone => (
                                     <option key={zone.id} className="font-itcbook" value={zone.id}>
                                         {zone.name} - S/.{zone.price}.00
                                     </option>
