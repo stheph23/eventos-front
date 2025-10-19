@@ -5,8 +5,11 @@ import fb from "../../assets/images/icon-fb.svg"
 
 const Footer = () => {
     return(
-    <div className="flex grid items-center w-full grid-cols-4 gap-3 p-4 justify-items-center bg-green">
-        <img src={logo} className="rounded-full"/>
+    <div className="flex grid items-center w-full grid-cols-1 gap-8 p-4 py-6 md:gap-3 md:grid-cols-4 justify-items-center bg-green">
+       <Link to="/inicio" 
+         className="w-28">
+         <img src={logo} className="rounded-full"/>
+       </Link>
         
         <div className="flex items-center gap-2">
             <a 
@@ -34,7 +37,6 @@ const Footer = () => {
             EVENTOS
         </Link>
         
-        {/* Enlace a inicio usando Link */}
         <Link 
             to="/inicio" 
             className="text-2xl text-white cursor-pointer hover:underline font-itcmedium"

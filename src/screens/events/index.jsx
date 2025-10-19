@@ -41,7 +41,7 @@ export default function Events() {
       ) : err ? (
         <p className="text-center text-red-600 font-itcmedium">{err}</p>
       ) : (
-        <div className="grid items-center justify-center w-full grid-cols-3 gap-3 space-y-6 justify-items-center ">
+        <div className="grid items-center justify-center w-full grid-cols-1 gap-3 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center ">
           {events.map((ev) => (
             <CardEvent
               key={ev.id}

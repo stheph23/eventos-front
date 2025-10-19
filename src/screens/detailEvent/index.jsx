@@ -184,7 +184,9 @@ const totalPrice = unitPrice * ticketCount;
             
             <div className="px-[5%] flex flex-col gap-8">
                 {/* Banner del evento */}
-                <img src={eventData.image_url} className="w-full rounded-xl h-[406px] object-cover shadow-lg" alt="Banner del evento"/>
+<div className="w-full">
+                  <img src={eventData.image_url} className="object-cover  sm:max-h-[360px] w-full shadow-lg rounded-xl" alt="Banner del evento"/>
+</div>
                 
                 {/* Información principal */}
                 <div className="flex flex-col gap-8 lg:flex-row">
