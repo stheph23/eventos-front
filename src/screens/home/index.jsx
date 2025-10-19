@@ -44,6 +44,7 @@ export default function Home() {
               imageUrl={ev.image_url}
               title={ev.title}
               startDateTime={ev.start_datetime}
+              price={ev.price}
             />
           ))}
         </div>

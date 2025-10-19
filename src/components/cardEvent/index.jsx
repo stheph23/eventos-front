@@ -35,7 +35,8 @@ const CardEvent = ({
     id,
     imageUrl,
     title,
-    startDateTime
+    startDateTime,
+    price
 }) => {
     return(
         <div className="w-[283px] h-[300px] overflow-hidden flex flex-col gap-2 rounded-2xl drop-shadow-card bg-white">
@@ -55,7 +56,7 @@ const CardEvent = ({
                     </p>
                 </div>
                 <div className="flex items-center justify-center gap-3 font-itcmedium">
-                    <p className="text-gray-500">S/. 11.00</p>
+                    <p className="text-gray-500">S/. {price}</p>
                     <button className="p-1 px-2 text-white rounded-xl bg-blue">
                         COMPRAR
                     </button>
