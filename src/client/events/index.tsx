@@ -61,3 +61,29 @@ export async function fetchEventById(id: number | string): Promise<EventItem> {
   const { data } = await http.get<EventItem>(`events/${id}/`);
   return data;
 }
+
+export async function uploadImage(file) {
+  console.log("🚀 [DEBUG] Enviando imagen a Django:", file);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  try{
+const res = await fetch("http://127.0.0.1:8000/api/uploads/image/", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("❌ Fallo subiendo imagen:", text);
+      throw new Error("Fallo subiendo imagen: " + text);
+    }
+
+    const data = await res.json();
+    console.log("✅ [DEBUG] Respuesta del backend:", data);
+    return data.url;
+  } catch (error) {
+    console.error("🔥 Error en uploadImage:", error);
+    throw error;
+  }
+}

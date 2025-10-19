@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Footer from "../../../../components/footer";
 import Header from "../../../../components/header";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchEventById, createEvent, updateEvent } from "../../../../client/events";
+import { fetchEventById, createEvent, updateEvent, uploadImage } from "../../../../client/events";
 
 function toISO(dateStr, timeStr) {
   // Espera "YYYY-MM-DD" y "HH:MM"
@@ -17,20 +17,7 @@ function fromISO(iso) {
   const time = d.toISOString().slice(11, 16);
   return { date, time };
 }
-async function uploadImage(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000/api/"}uploads/image/`, {
-    method: "POST",
-    body: formData,
-  });
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Fallo subiendo imagen: ${txt}`);
-  }
-  const data = await res.json();
-  return data.url; // backend responde { url: "http://.../media/events/uuid_nombre.jpg" }
-}
+
 
 export default function AdminEventEditor() {
   const nav = useNavigate();
@@ -48,6 +35,9 @@ const [preview, setPreview] = useState("");
     start_time: "",
     end_date: "",
     end_time: "",
+    price: "",
+    gold_price: "",
+    vip_price: "",
   });
 
   useEffect(() => {
@@ -68,6 +58,9 @@ const [preview, setPreview] = useState("");
           start_time: s.time,
           end_date: e.date,
           end_time: e.time,
+          price: data.price || "",
+          gold_price: data.gold_price || "",
+          vip_price: data.vip_price || "",
         });
       } finally {
         if (alive) setLoading(false);
@@ -95,28 +88,38 @@ const onFileChange = (e) => {
     if (!canSave) return;
     setSaving(true);
 
-    let imageUrlToSend = form.image_url?.trim() || "";
+    try {
+
+    console.log("🟢 [DEBUG] Iniciando guardado del evento...");
+    console.log("📸 Archivo seleccionado:", file);
+    console.log("🌐 URL escrita manualmente:", form.image_url);
+    let imageUrlToSend = form.image_url;
 
     if (file) {
-      // 1) subimos archivo al backend → obtenemos URL
+      console.log("⏳ Subiendo imagen al servidor...");
       imageUrlToSend = await uploadImage(file);
+      console.log("✅ URL devuelta por el backend:", imageUrlToSend);
     }
-
-    try {
       const payload = {
         title: form.title.trim(),
         description: form.description || "",
         image_url: imageUrlToSend || null,
         start_datetime: toISO(form.start_date, form.start_time),
         end_datetime: form.end_date && form.end_time ? toISO(form.end_date, form.end_time) : null,
+        price: form.price || 0,
+        gold_price: form.gold_price || 0,
+        vip_price: form.vip_price || 0,
         status: "active",
         is_published: true,
+        organizer_id: 1, // ✅ valor temporal
+        venue_id: 2,
       };
       if (isCreate) {
         await createEvent(payload);
       } else {
         await updateEvent(id, payload);
       }
+      console.log("🎉 Evento creado o actualizado correctamente");
       nav("/admin/events");
     } catch (e) {
       console.error(e);
@@ -144,27 +147,20 @@ const onFileChange = (e) => {
 
         <div className="grid grid-cols-1 gap-6 font-itcbook md:grid-cols-2">
           <div className="space-y-3">
-<label className="block text-sm">Imagen (subir archivo)</label>
-<input type="file" accept="image/*" onChange={onFileChange} className="w-full p-2 border rounded" />
+            <label className="block text-sm">Imagen (subir archivo)</label>
+            <input type="file" accept="image/*" onChange={onFileChange} className="w-full p-2 border rounded" />
 
-<label className="block mt-2 text-sm">…o pegar URL pública</label>
-<input
-  value={form.image_url}
-  onChange={onChange("image_url")}
-  className="w-full p-2 border rounded"
-  placeholder="https://..."
-/>
 
-{(preview || form.image_url) && (
-  <div className="mt-2">
-    <p className="text-sm text-gray-500">Vista previa:</p>
-    <img
-      src={preview || form.image_url}
-      alt="preview"
-      className="object-cover w-full max-w-xl shadow rounded-xl"
-    />
-  </div>
-)}
+            {(preview || form.image_url) && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">Vista previa:</p>
+                <img
+                  src={preview || form.image_url}
+                  alt="preview"
+                  className="object-cover w-full max-w-xl shadow rounded-xl"
+                />
+              </div>
+            )}
 
 
             <label className="block text-sm">Título</label>
@@ -196,6 +192,46 @@ const onFileChange = (e) => {
             <input type="time" value={form.end_time} onChange={onChange("end_time")} className="w-full p-2 border rounded" />
           </div>
         </div>
+
+<div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
+  <div>
+    <label className="block text-sm font-itcmedium">General</label>
+    <input
+      type="number"
+      value={form.price}
+      onChange={onChange("price")}
+      placeholder="S/. 0.00"
+      min="0"
+      step="0.01"
+      className="w-full p-2 border rounded"
+    />
+  </div>
+  <div>
+    <label className="block text-sm font-itcmedium">VIP</label>
+    <input
+      type="number"
+      value={form.gold_price}
+      onChange={onChange("gold_price")}
+      placeholder="S/. 0.00"
+      min="0"
+      step="0.01"
+      className="w-full p-2 border rounded"
+    />
+  </div>
+  <div>
+    <label className="block text-sm font-itcmedium">Platinum</label>
+    <input
+      type="number"
+      value={form.vip_price}
+      onChange={onChange("vip_price")}
+      placeholder="S/. 0.00"
+      min="0"
+      step="0.01"
+      className="w-full p-2 border rounded"
+    />
+  </div>
+</div>
+
 
 
 

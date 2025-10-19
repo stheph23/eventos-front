@@ -86,6 +86,7 @@ const closeSuccess = () => setShowSuccess(false);
                     imageUrl={ev.image_url}
                     title={ev.title}
                     startDateTime={ev.start_datetime}
+                    price={ev.price}
                   />
                 </Link>
                 <div className="absolute flex gap-2 top-2 right-2">
