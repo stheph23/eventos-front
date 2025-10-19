@@ -78,11 +78,7 @@ const MapPinIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
 );
-const ZONES_FAKE = [
-  { id: "general", name: "General", price: 20 },
-  { id: "vip", name: "VIP", price: 60 },
-  { id: "platinum", name: "Platinum", price: 80 },
-];
+
 
 
 export default function DetailEvent() {
@@ -90,17 +86,25 @@ export default function DetailEvent() {
   const { id } = useParams();
 
   const [eventData, setEventData] = useState(null);
+const ZONES = eventData ? [
+  { id: "general",  name: "General",   price: eventData.price },
+  { id: "vip",      name: "VIP",       price: eventData.gold_price },
+  { id: "platinum", name: "Platinum",  price: eventData.vip_price },
+] : [];
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
 
     // Datos de ejemplo para el evento
-    const [ticketCount, setTicketCount] = useState(1);
-    const [selectedZone, setSelectedZone] = useState("general");
+
     const [showPaymentModal, setShowPaymentModal] = useState(false);     
 
-    const currentZone = ZONES_FAKE.find(z => z.id === selectedZone);
-    const totalPrice = currentZone ? currentZone.price * ticketCount : eventData.price * ticketCount;
+const [ticketCount, setTicketCount] = useState(1);
+const [selectedZone, setSelectedZone] = useState("general");
+
+const currentZone = ZONES.find(z => z.id === selectedZone) || null;
+const unitPrice = currentZone?.price ?? 0;
+const totalPrice = unitPrice * ticketCount;
 
   useEffect(() => {
     let alive = true;
@@ -128,7 +132,10 @@ export default function DetailEvent() {
           date,
           time,
           image_url: data.image_url ?? null,
-          // si luego necesitas otros campos, los pasas aquí
+          price: data.price ? parseFloat(data.price) : 0,
+          gold_price: data.gold_price ? parseFloat(data.gold_price) : 0,
+          vip_price: data.vip_price ? parseFloat(data.vip_price) : 0,
+          direccion: data.direccion || "",
         });
       } catch (e) {
         console.error(e);
@@ -216,7 +223,7 @@ export default function DetailEvent() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500 font-itcbook">Precio</p>
-                                    <p className="text-sm font-itcmedium">S/20.00 </p>
+                                    <p className="text-sm font-itcmedium">S/.{Number(eventData.price || 0).toFixed(2)}</p>
                                 </div>
                             </div>
                             
@@ -244,21 +251,20 @@ export default function DetailEvent() {
                             <select 
                                 className="w-full p-3 border rounded-lg outline-none"
                                 value={selectedZone}
-                                onCh
-                                ange={(e) => setSelectedZone(e.target.value)}
+                                onChange={(e) => setSelectedZone(e.target.value)}
                             >
-                                {ZONES_FAKE.map(zone => (
-                                    <option key={zone.id} className="font-itcbook" value={zone.id}>
-                                        {zone.name} - S/.{zone.price}.00
-                                    </option>
-                                ))}
+                              {ZONES.map(zone => (
+                                <option key={zone.id} className="font-itcbook" value={zone.id}>
+                                  {zone.name} - S/.{Number(zone.price || 0).toFixed(2)}
+                                </option>
+                              ))}
                             </select>
                         </div>
                         
                         <div className="flex items-center justify-between mb-6">
                             <span className="text-gray-600 font-itcbook">Precio por persona:</span>
                             <span className="text-xl text-blue font-itcbold">
-                                S/.{currentZone ? currentZone.price : eventData.price}.00
+                              S/.{Number(unitPrice).toFixed(2)}
                             </span>
                         </div>
                         
@@ -285,7 +291,7 @@ export default function DetailEvent() {
                         
                         <div className="flex items-center justify-between mb-6 text-lg font-itcbold">
                             <span>Total:</span>
-                            <span className="text-xl text-green">S/.{totalPrice}.00</span>
+                            <span className="text-xl text-green">S/.{Number(totalPrice).toFixed(2)}</span>
                         </div>
                         
                         <button
