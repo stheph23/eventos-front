@@ -48,7 +48,8 @@ export default function Events() {
               id={ev.id}
               imageUrl={ev.image_url}
               title={ev.title}
-              startDateTime={ev.start_datetime}  // <- nombre correcto de la prop
+              startDateTime={ev.start_datetime} 
+              price={ev.price}
             />
           ))}
         </div>
