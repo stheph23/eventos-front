@@ -64,7 +64,7 @@ export async function uploadImage(file) {
   const formData = new FormData();
   formData.append("file", file);
   try{
-const res = await fetch("http://127.0.0.1:8000/api/uploads/image/", {
+const res = await fetch("https://apis-capstone.up.railway.app/api/uploads/image/", {
       method: "POST",
       body: formData,
     });
