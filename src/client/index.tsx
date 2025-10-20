@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const http: AxiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL ?? "http://127.0.0.1:8000/api/",
+  baseURL: process.env.REACT_APP_API_BASE_URL ?? "https://apis-capstone.up.railway.app/api/",
   timeout: 300000,
   headers: {
     "Content-Type": "application/json",
