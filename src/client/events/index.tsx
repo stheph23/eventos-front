@@ -32,13 +32,9 @@ export async function deleteEvent(id: number | string) {
 }
 
 export async function fetchAllEvents(): Promise<EventItem[]> {
-  const { data } = await http.get<EventItem[]>("events");
-  console.log("API /events (raw):", data); // <- imprime todo lo que manda el endpoint
-  // Ordenar por fecha de inicio ascendente (próximos primero)
-  return [...data].sort(
-    (a, b) =>
-      new Date(a.start_datetime).getTime() - new Date(b.start_datetime).getTime()
-  );
+  const { data } = await http.get<EventItem[]>("events?ordering=-created_at");
+  console.log("API /events (ordenado por más recientes):", data);
+  return data;
 }
 
 export async function fetchLatestEvents(limit = 3): Promise<EventItem[]> {
