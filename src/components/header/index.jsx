@@ -78,21 +78,21 @@ const Header = () => {
         {/* Izquierda: INICIO */}
         <button
           onClick={goHome}
-          className="text-2xl text-left text-gray-600 cursor-pointer hover:text-gray-900 font-itcbold"
+          className="text-lg md:text-2xl text-left text-gray-600 cursor-pointer hover:text-gray-900 font-itcbold"
         >
           INICIO
         </button>
 
         {/* Centro: LOGO */}
         <div className="flex items-center justify-center">
-          <img src={logo} alt="logo" className="h-28" />
+          <img src={logo} alt="logo" className="h-16 md:h-28" />
         </div>
 
         {/* Derecha: NUESTROS EVENTOS + Menú usuario */}
         <div className="flex items-center justify-end gap-4">
           <button
             onClick={goEvents}
-            className="text-2xl text-gray-600 cursor-pointer hover:text-gray-900 font-itcbold"
+            className="hidden md:block text-lg md:text-2xl text-gray-600 cursor-pointer hover:text-gray-900 font-itcbold"
           >
             NUESTROS EVENTOS
           </button>

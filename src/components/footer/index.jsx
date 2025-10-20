@@ -5,10 +5,20 @@ import fb from "../../assets/images/icon-fb.svg"
 
 const Footer = () => {
     return(
-    <div className="flex grid items-center w-full grid-cols-4 gap-3 p-4 justify-items-center bg-green">
-        <img src={logo} className="rounded-full"/>
+    <div className="flex flex-col items-center w-full gap-6 p-6 bg-green md:grid md:grid-cols-4 md:gap-3 md:justify-items-center min-h-[150px]">
+        <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full">
+            <Link
+                to="/inicio"
+                className="flex items-center justify-center w-full h-full"
+            >
+                <img src={logo} 
+                    alt="Un Día de Esperanza logo" 
+                    className="rounded-full w-12 h12 object-contain"
+                />
+            </Link>
+        </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
             <a 
                 href="https://www.instagram.com/undiadeesperanza/?hl=es" 
                 target="_blank" 
@@ -29,7 +39,7 @@ const Footer = () => {
         
         <Link 
             to="/eventos" 
-            className="text-2xl text-white cursor-pointer hover:underline font-itcmedium"
+            className="text-lg text-white cursor-pointer hover:underline font-itcmedium md:text-2xl"
         >
             EVENTOS
         </Link>
@@ -37,7 +47,7 @@ const Footer = () => {
         {/* Enlace a inicio usando Link */}
         <Link 
             to="/inicio" 
-            className="text-2xl text-white cursor-pointer hover:underline font-itcmedium"
+            className="text-lg text-white cursor-pointer hover:underline font-itcmedium md:text-2xl"
         >
             PÁGINA PRINCIPAL
         </Link>
