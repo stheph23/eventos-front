@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo-home.svg"
-import { Link } from "react-router-dom"; 
 
 const UserIcon = (props) => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -44,7 +43,7 @@ const Header = () => {
   }, []);
 
   const goHome = useCallback(() => navigate("/inicio"), [navigate]);
-  const goEvents = useCallback(() => navigate("/eventos"), [navigate]);
+  const goEvents = useCallback(() => navigate("/events"), [navigate]);
   const goLogin = useCallback(() => {
     setMenuOpen(false);
     navigate("/iniciar-sesión"); 
@@ -75,25 +74,25 @@ const Header = () => {
   
      return (
     <div className="flex items-center px-[5%] justify-center w-full py-3 bg-white">
-      <div className="grid items-center w-full grid-cols-3 gap-1 md:gap-3 md:px-4">
+      <div className="grid items-center w-full grid-cols-3 gap-3 px-4">
         {/* Izquierda: INICIO */}
         <button
           onClick={goHome}
-          className="text-base text-left text-gray-600 cursor-pointer md:text-2xl hover:text-gray-900 font-itcbold"
+          className="text-lg md:text-2xl text-left text-gray-600 cursor-pointer hover:text-gray-900 font-itcbold"
         >
           INICIO
         </button>
 
         {/* Centro: LOGO */}
-        <Link to="/inicio"  className="flex items-center justify-center">
-          <img src={logo} alt="logo" className="h-10 md:h-28" />
-        </Link>
+        <div className="flex items-center justify-center">
+          <img src={logo} alt="logo" className="h-16 md:h-28" />
+        </div>
 
         {/* Derecha: NUESTROS EVENTOS + Menú usuario */}
         <div className="flex items-center justify-end gap-4">
           <button
             onClick={goEvents}
-            className="text-base text-gray-600 cursor-pointer md:text-2xl hover:text-gray-900 font-itcbold"
+            className="hidden md:block text-lg md:text-2xl text-gray-600 cursor-pointer hover:text-gray-900 font-itcbold"
           >
             NUESTROS EVENTOS
           </button>
