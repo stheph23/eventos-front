@@ -34,26 +34,34 @@ export default function Events() {
         <Header/>
         <img src={banner} className="w-full h-auto "/>
 
-        <h1 className="pt-3 pb-8 text-4xl text-center font-itcbold">EVENTOS</h1>
-
-      {loading ? (
-        <p className="text-center font-itcmedium">Cargando eventos...</p>
-      ) : err ? (
-        <p className="text-center text-red-600 font-itcmedium">{err}</p>
-      ) : (
-        <div className="grid items-center justify-center w-full grid-cols-1 gap-3 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center ">
-          {events.map((ev) => (
-            <CardEvent
-              key={ev.id}
-              id={ev.id}
-              imageUrl={ev.image_url}
-              title={ev.title}
-              startDateTime={ev.start_datetime} 
-              price={ev.price}
-            />
-          ))}
-        </div>
-      )}
+<div className="px-[5%]">
+          <h1 className="pt-3 pb-8 text-4xl text-center font-itcbold">EVENTOS</h1>
+  
+          {loading ? (
+                  <div className="grid items-center justify-center w-full grid-cols-1 gap-3 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center ">
+              {Array(8)
+                .fill(0)
+                .map((_, i) => (
+                  <CardEvent key={i} loading />
+                ))}
+            </div>
+          ) :  err ? (
+            <p className="text-center text-red-600 font-itcmedium">{err}</p>
+          ) : (
+                  <div className="grid items-center justify-center w-full grid-cols-1 gap-3 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center ">
+                    {events.map((ev) => (
+                      <CardEvent
+                        key={ev.id}
+                        id={ev.id}
+                        imageUrl={ev.image_url}
+                        title={ev.title}
+                        startDateTime={ev.start_datetime} 
+                        price={ev.price}
+                      />
+                    ))}
+                  </div>
+                )}
+</div>
 
 
         <Footer/>

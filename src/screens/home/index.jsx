@@ -36,9 +36,15 @@ export default function Home() {
         <div className="px-[5%]">
           <h1 className="pt-8 pb-8 text-2xl text-center md:text-4xl font-itcbold">NUESTROS PRÓXIMOS EVENTOS</h1>
           <div className="flex items-center justify-center w-full gap-10 pb-12">
-            {loading ? (
-              <p className="text-center font-itcmedium">Cargando eventos...</p>
-            ) : (
+{loading ? (
+              <div className="flex flex-col items-center justify-center w-full gap-10 lg:flex-row">
+    {Array(3)
+      .fill(0)
+      .map((_, i) => (
+        <CardEvent key={i} loading />
+      ))}
+  </div>
+) : (
               <div className="flex flex-col items-center justify-center w-full gap-10 lg:flex-row">
                 {events.map(ev => (
                   <CardEvent

@@ -75,7 +75,13 @@ const closeSuccess = () => setShowSuccess(false);
         </div>
 
         {loading ? (
-          <p>Cargando...</p>
+          <div className="grid items-start justify-center w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array(8)
+              .fill(0)
+              .map((_, i) => (
+                <CardEvent key={i} loading />
+              ))}
+          </div>
         ) : (
           <div className="grid items-start justify-center w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {events.map((ev) => (
@@ -94,7 +100,7 @@ const closeSuccess = () => setShowSuccess(false);
                     className="px-2 py-1 text-sm border rounded font-itcbook bg-white/90"
                     onClick={() => nav(`/admin/events/${ev.id}`)}
                   >
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M4 21.2852C3.71667 21.2852 3.47933 21.1892 3.288 20.9972C3.09667 20.8052 3.00067 20.5678 3 20.2852V17.8602C3 17.5935 3.05 17.3392 3.15 17.0972C3.25 16.8552 3.39167 16.6428 3.575 16.4602L16.2 3.86016C16.4 3.67682 16.621 3.53516 16.863 3.43516C17.105 3.33516 17.359 3.28516 17.625 3.28516C17.891 3.28516 18.1493 3.33516 18.4 3.43516C18.6507 3.53516 18.8673 3.68516 19.05 3.88516L20.425 5.28516C20.625 5.46849 20.7707 5.68516 20.862 5.93516C20.9533 6.18516 20.9993 6.43516 21 6.68516C21 6.95182 20.954 7.20616 20.862 7.44816C20.77 7.69016 20.6243 7.91082 20.425 8.11016L7.825 20.7102C7.64167 20.8935 7.429 21.0352 7.187 21.1352C6.945 21.2352 6.691 21.2852 6.425 21.2852H4ZM17.6 8.08516L19 6.68516L17.6 5.28516L16.2 6.68516L17.6 8.08516Z" fill="#86c246"/>
                     </svg>
                   </button>

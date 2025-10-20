@@ -1,6 +1,7 @@
-import minImageBanner from "../../assets/images/example-banner.png"
+import React from "react";
 import calendar from "../../assets/images/calendar.svg"
 import { Link } from "react-router-dom"; 
+import ContentLoader from "react-content-loader"; // 👈 agregado
 
 const MONTHS_ES = [
   "enero","febrero","marzo","abril","mayo","junio",
@@ -36,8 +37,29 @@ const CardEvent = ({
     imageUrl,
     title,
     startDateTime,
-    price
+    price,
+    loading
 }) => {
+if (loading) {
+    return (
+      <div className="w-[283px] h-[300px] overflow-hidden rounded-2xl bg-white drop-shadow-card">
+        <ContentLoader
+          speed={2}
+          width={283}
+          height={300}
+          viewBox="0 0 283 300"
+          backgroundColor="#f3f3f3"
+          foregroundColor="#ecebeb"
+        >
+          <rect x="0" y="0" rx="12" ry="12" width="283" height="150" />
+          <rect x="20" y="160" rx="4" ry="4" width="180" height="16" />
+          <rect x="20" y="185" rx="4" ry="4" width="140" height="12" />
+          <rect x="20" y="215" rx="6" ry="6" width="90" height="30" />
+          <rect x="130" y="215" rx="6" ry="6" width="90" height="30" />
+        </ContentLoader>
+      </div>
+    );
+  }
     return(
         <Link to={`/detalle-evento/${id}`}>
             <div className="w-[283px] h-[300px] overflow-hidden flex flex-col gap-2 rounded-2xl drop-shadow-card bg-white">
