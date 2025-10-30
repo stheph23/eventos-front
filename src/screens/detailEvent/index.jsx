@@ -79,6 +79,12 @@ const MapPinIcon = () => (
   </svg>
 );
 
+const SeatIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2zm0 0V7a2 2 0 012-2h10a2 2 0 012 2v4M9 22V12m6 10V12" />
+  </svg>
+);
+
 
 
 export default function DetailEvent() {
@@ -172,9 +178,9 @@ const totalPrice = unitPrice * ticketCount;
      const eventoData = {
 
         zones: [
-            { id: "general", name: "General", price: 450 },
-            { id: "vip", name: "VIP", price: 800 },
-            { id: "platinum", name: "Platinum", price: 1200 }
+            { id: "general", name: "General", price: 450, avaible: 100 },
+            { id: "vip", name: "VIP", price: 800, avaible: 80 },
+            { id: "platinum", name: "Platinum", price: 1200, avaible: 50 }
         ]
     };
     
@@ -237,6 +243,19 @@ const totalPrice = unitPrice * ticketCount;
                                     <p className="text-sm text-gray-500 font-itcbook">Ubicación</p>
                                     <p className="text-sm font-itcmedium">
                                         Lima, Perú
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="p-3 bg-yellow-100 rounded-full">
+                                    <SeatIcon />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500 font-itcbook">Asientos disponibles</p>
+                                    <p className="text-sm font-itcmedium">
+                                        {eventData.avaibleSeats} General - 100 disponibles <br/>
+                                        {eventData.vipSeats} VIP - 80 disponibles <br/>
+                                        {eventData.platinumSeats} Platinum - 50 disponibles
                                     </p>
                                 </div>
                             </div>
