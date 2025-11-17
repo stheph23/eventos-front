@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PaymentButton from "../paymentModal/PaymentButton.jsx";
 
 const PaymentModal = ({ isOpen, onClose, totalPrice, eventName }) => {
   const [selectedPayment, setSelectedPayment] = useState("yape");
@@ -156,12 +157,20 @@ const PaymentModal = ({ isOpen, onClose, totalPrice, eventName }) => {
           >
             Cancelar
           </button>
+
+          <div className="flex-1">
+            <PaymentButton event={{ title: eventName, price: totalPrice }} />
+          </div>
+
+          {/* 
           <button
             onClick={handlePayment}
             className="flex-1 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 font-itcmedium"
           >
             Confirmar Pago
+            
           </button>
+          */}
         </div>
       </div>
     </div>

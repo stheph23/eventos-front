@@ -61,7 +61,7 @@ export default function Events() {
                     ))}
                   </div>
                 )}
-</div>
+          </div>
 
 
         <Footer/>

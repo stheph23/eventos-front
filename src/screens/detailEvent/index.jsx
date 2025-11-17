@@ -5,6 +5,8 @@ import Header from "../../components/header";
 import bannerprueba from "../../assets/images/detalle-evento-prueba.png";
 import PaymentModal from "../../components/paymentModal";
 import { fetchEventById } from "../../client/events";
+import PaymentButton from "../../components/paymentModal/PaymentButton.jsx";
+
 
 const MONTHS_ES = [
   "enero","febrero","marzo","abril","mayo","junio",
@@ -166,7 +168,7 @@ const totalPrice = unitPrice * ticketCount;
             setTicketCount(prev => prev - 1);
         }
     };
-
+/*
     const handleBuyTickets = () => {
         setShowPaymentModal(true);
     };
@@ -174,7 +176,7 @@ const totalPrice = unitPrice * ticketCount;
     const handleCloseModal = () => {
         setShowPaymentModal(false);
     };
-
+*/
      const eventoData = {
 
         zones: [
@@ -314,12 +316,24 @@ const totalPrice = unitPrice * ticketCount;
                             <span>Total:</span>
                             <span className="text-xl text-green">S/.{Number(totalPrice).toFixed(2)}</span>
                         </div>
-                        
+
+                        <PaymentButton
+                          event={{
+                            title: eventData.title,
+                            price: unitPrice,
+                            quantity: ticketCount,   // ✅ cantidad de boletos
+                            total: totalPrice        // opcional, solo informativo
+                          }}
+                        />
+
+
+
+                        {/* Botón de compra 
                         <button
                             onClick={handleBuyTickets}
                             className="w-full px-4 py-3 font-bold text-white transition-colors rounded-lg bg-green font-itcbold hover:bg-green-600">
                             Comprar boletos
-                        </button>
+                        </button>*/}
                         
                         <p className="mt-4 text-sm text-center text-gray-500 font-itcbook">
                             * Boletos limitados. Precios sujetos a cambio.
@@ -328,12 +342,19 @@ const totalPrice = unitPrice * ticketCount;
                 </div>
             </div>
 
-            <PaymentModal
+
+
+
+
+
+            {/*  Modal de pago               
+           <PaymentModal
                 isOpen={showPaymentModal}
                 onClose={handleCloseModal}
                 totalPrice={totalPrice}
                 eventName={eventData.title}
             />
+              */}  
 
             <Footer/>
         </div>
